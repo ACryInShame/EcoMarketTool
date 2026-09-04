@@ -66,6 +66,7 @@ namespace EcoMarketTools
                 allOffers.Clear();
                 allOffers.AddRange(newOffers);
 
+                TEST();
                 Plugin.PluginLog.LogInfo(
                     $"[EcoMarketTools] Loaded {allOffers.Count} valid market offers."
                 );
@@ -76,6 +77,59 @@ namespace EcoMarketTools
                     $"[EcoMarketTools] Market pull failed: {ex}"
                 );
             }
+        }
+
+        private void TEST ()
+        {
+            var filter = new MarketFilter
+            {
+                Type = MarketOrderType.Sell,
+                ItemName = "Iron Ore",
+                Currency = "Crater Coin"
+            };
+
+            var offers =
+                MarketService.Filter(
+                    allOffers,
+                    filter
+                );
+
+            var stats =
+                MarketStatisticsService.Calculate(
+                    offers
+                );
+
+            Plugin.PluginLog.LogInfo(
+                $"[TEST] Iron Ore Sell Offers: {stats.OfferCount}"
+            );
+
+            Plugin.PluginLog.LogInfo(
+                $"[TEST] Min: {stats.Minimum}"
+            );
+
+            Plugin.PluginLog.LogInfo(
+                $"[TEST] Max: {stats.Maximum}"
+            );
+
+            Plugin.PluginLog.LogInfo(
+                $"[TEST] Mean: {stats.Mean}"
+            );
+
+            Plugin.PluginLog.LogInfo(
+                $"[TEST] Median: {stats.Median}"
+            );
+
+            Plugin.PluginLog.LogInfo(
+                $"[TEST] Mode: {stats.Mode}"
+            );
+
+            Plugin.PluginLog.LogInfo(
+                $"[TEST] Stores: {stats.StoreCount}"
+            );
+
+            Plugin.PluginLog.LogInfo(
+                $"[TEST] Quantity: {stats.TotalQuantity}"
+            );
         }
     }
 }
