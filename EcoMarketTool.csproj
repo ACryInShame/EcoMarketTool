@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>EcoMarketTool</AssemblyName>
+    <Product>My first plugin</Product>
+    <Version>1.0.0</Version>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <RestoreAdditionalProjectSources>
+      https://api.nuget.org/v3/index.json;
+      https://nuget.bepinex.dev/v3/index.json;
+      https://nuget.samboy.dev/v3/index.json
+    </RestoreAdditionalProjectSources>
+    <RootNamespace>EcoMarketTool</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+
+  <Reference Include="Eco.Client">
+    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Eco.Client.dll</HintPath>
+    <Private>false</Private>
+  </Reference>
+
+  <Reference Include="Eco.Client.Utils">
+    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Eco.Client.Utils.dll</HintPath>
+    <Private>false</Private>
+  </Reference>
+
+  <Reference Include="Eco.Shared">
+    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Eco.Shared.dll</HintPath>
+    <Private>false</Private>
+  </Reference>
+
+  <Reference Include="Il2Cppmscorlib">
+    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
+    <Private>false</Private>
+  </Reference>
+
+  <Reference Include="UnityEngine.CoreModule">
+    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
+    <Private>false</Private>
+  </Reference>	
+	
+  </ItemGroup>
+</Project>
