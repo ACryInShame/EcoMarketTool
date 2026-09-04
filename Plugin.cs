@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
+using HarmonyLib;
 
 namespace EcoMarketTools
 {
@@ -9,11 +10,30 @@ namespace EcoMarketTools
         "Eco Market Tools",
         "0.1.0"
     )]
+
     public class Plugin : BasePlugin
     {
+        internal static ManualLogSource PluginLog;
+
+        private Harmony harmony;
+
         public override void Load()
         {
-            Log.LogInfo("[EcoMarketTools] Client plugin loaded!");
+            PluginLog = Log;
+
+            Log.LogInfo(
+                "[EcoMarketTools] Client plugin loaded!"
+            );
+
+            harmony = new Harmony(
+                "com.lou.EcoMarketTools"
+            );
+
+            harmony.PatchAll();
+
+            Log.LogInfo(
+                "[EcoMarketTools] Harmony patches applied."
+            );
         }
     }
 }
