@@ -17,6 +17,8 @@ namespace EcoMarketTools
 
         private Harmony harmony;
 
+        private LocalWebServer webServer;
+
         public override void Load()
         {
             PluginLog = Log;
@@ -34,6 +36,9 @@ namespace EcoMarketTools
             Log.LogInfo(
                 "[EcoMarketTools] Harmony patches applied."
             );
+
+            webServer = new LocalWebServer();
+            webServer.Start();
         }
     }
 }
