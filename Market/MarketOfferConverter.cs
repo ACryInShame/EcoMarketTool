@@ -43,19 +43,22 @@ namespace EcoMarketTools
 
                     Type = MarketOrderType.Sell,
 
-                    Price = trade.SalePrice,
-                    Quantity = trade.NumberAvailable,
+                    Price = SafeFloat(trade.SalePrice),
+                    Quantity = SafeFloat(trade.NumberAvailable),
 
                     Currency = currencyName,
 
                     StoreName = storeName,
                     StoreMarkedUpName = rawStoreName,
 
-                    StorePosition =
-                        trade.StorePosition,
+                    StorePosition = new UnityEngine.Vector3(
+                                    SafeFloat(trade.StorePosition.x),
+                                    SafeFloat(trade.StorePosition.y),
+                                    SafeFloat(trade.StorePosition.z)
+                                    ),
 
                     StoreBalance =
-                        trade.StoreBalance,
+                        SafeFloat(trade.StoreBalance),
 
                     LimitedFunds =
                         trade.LimitedFunds,
@@ -79,19 +82,22 @@ namespace EcoMarketTools
 
                     Type = MarketOrderType.Buy,
 
-                    Price = trade.WantedPrice,
-                    Quantity = trade.NumberWanted,
+                    Price = SafeFloat(trade.WantedPrice),
+                    Quantity = SafeFloat(trade.NumberWanted),
 
                     Currency = currencyName,
 
                     StoreName = storeName,
                     StoreMarkedUpName = rawStoreName,
 
-                    StorePosition =
-                        trade.StorePosition,
+                    StorePosition = new UnityEngine.Vector3(
+                                    SafeFloat(trade.StorePosition.x),
+                                    SafeFloat(trade.StorePosition.y),
+                                    SafeFloat(trade.StorePosition.z)
+                                    ),
 
                     StoreBalance =
-                        trade.StoreBalance,
+                        SafeFloat(trade.StoreBalance),
 
                     LimitedFunds =
                         trade.LimitedFunds,
@@ -134,6 +140,17 @@ namespace EcoMarketTools
             return Regex
                 .Replace(value, "<.*?>", "")
                 .Trim();
+        }
+
+        private static float SafeFloat(float value)
+        {
+            if (float.IsNaN(value))
+                return 0f;
+
+            if (float.IsInfinity(value))
+                return 0f;
+
+            return value;
         }
     }
 }

@@ -20,27 +20,27 @@
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
 
   <Reference Include="Eco.Client">
-    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Eco.Client.dll</HintPath>
+    <HintPath>S:\SteamLibrary\steamapps\common\Eco\BepInEx\interop\Eco.Client.dll</HintPath>
     <Private>false</Private>
   </Reference>
 
   <Reference Include="Eco.Client.Utils">
-    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Eco.Client.Utils.dll</HintPath>
+    <HintPath>S:\SteamLibrary\steamapps\common\Eco\BepInEx\interop\Eco.Client.Utils.dll</HintPath>
     <Private>false</Private>
   </Reference>
 
   <Reference Include="Eco.Shared">
-    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Eco.Shared.dll</HintPath>
+    <HintPath>S:\SteamLibrary\steamapps\common\Eco\BepInEx\interop\Eco.Shared.dll</HintPath>
     <Private>false</Private>
   </Reference>
 
   <Reference Include="Il2Cppmscorlib">
-    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
+    <HintPath>S:\SteamLibrary\steamapps\common\Eco\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
     <Private>false</Private>
   </Reference>
 
   <Reference Include="UnityEngine.CoreModule">
-    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
+    <HintPath>S:\SteamLibrary\steamapps\common\Eco\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
     <Private>false</Private>
   </Reference>	
 	

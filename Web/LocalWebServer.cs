@@ -139,6 +139,41 @@ namespace EcoMarketTools
 
                     return;
                 }
+                if (path == "/api/offers")
+                {
+                    var offers =
+                        MarketProbe.Instance.AllOffers
+                            .Select(o => new MarketOfferDto
+                            {
+                                ItemId = o.ItemId,
+                                ItemName = o.ItemName,
+                                Type = o.Type.ToString(),
+                                Price = o.Price,
+                                Quantity = o.Quantity,
+                                Currency = o.Currency,
+                                StoreName = o.StoreName,
+
+                                X = o.StorePosition.x,
+                                Y = o.StorePosition.y,
+                                Z = o.StorePosition.z,
+
+                                StoreBalance = o.StoreBalance,
+                                LimitedFunds = o.LimitedFunds,
+                                LimitedStorage = o.LimitedStorage,
+                                Authorized = o.Authorized
+                            })
+                            .ToList();
+
+                    string json =
+                        JsonSerializer.Serialize(offers);
+
+                    WriteJson(
+                        context,
+                        json
+                    );
+
+                    return;
+                }
 
                 WriteText(
                     context,
