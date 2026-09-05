@@ -2,16 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Eco Market Tools</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
 
 <body>
     <main class="container">
         <h1>Eco Market Tools</h1>
+
+        <div class="tabs">
+
+            <button
+                class="tab-button"
+                data-tab="sell"
+            >
+                Sale (Buy From)
+            </button>
+
+            <button
+                class="tab-button active"
+                data-tab="buy"
+            >
+                Buy (Sell To)
+            </button>
+
+            <button
+                class="tab-button"
+                data-tab="compare"
+            >
+                Compare
+            </button>
+
+            <button
+                class="tab-button"
+                data-tab="transport"
+            >
+                Transport
+            </button>
+        </div>
 
         <section class="filters">
             <div class="filter-group">
@@ -19,29 +56,9 @@
                     Item
                 </label>
 
-                <input
-                    id="itemFilter"
-                    type="text"
-                    placeholder="Iron Ore"
-                >
-            </div>
-
-            <div class="filter-group">
-                <label for="typeFilter">
-                    Type
-                </label>
-
-                <select id="typeFilter">
+                <select id="itemFilter">
                     <option value="">
-                        All
-                    </option>
-
-                    <option value="Buy">
-                        Buy
-                    </option>
-
-                    <option value="Sell">
-                        Sell
+                        All Items
                     </option>
                 </select>
             </div>
@@ -53,7 +70,7 @@
 
                 <select id="currencyFilter">
                     <option value="">
-                        All
+                        All Currencies
                     </option>
                 </select>
             </div>
@@ -69,48 +86,194 @@
                     placeholder="Store name"
                 >
             </div>
+
+            <div class="filter-group">
+                <label>
+                    <input
+                        id="hidePlayerCredit"
+                        type="checkbox"
+                    >
+
+                    Hide Player Credit
+                </label>
+            </div>
         </section>
 
-        <section class="summary">
-            <span id="offerCount">
-                Loading...
-            </span>
+
+        <!-- BUY TAB -->
+
+        <section
+            id="buyTab"
+            class="tab-content active"
+        >
+            <div class="summary">
+                <span id="buyCount">
+                    0 offers
+                </span>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-sort="ItemName">
+                                Item
+                            </th>
+
+                            <th data-sort="Price">
+                                Price
+                            </th>
+
+                            <th data-sort="Quantity">
+                                Qty
+                            </th>
+
+                            <th data-sort="Currency">
+                                Currency
+                            </th>
+
+                            <th data-sort="StoreName">
+                                Store
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="buyTableBody">
+                    </tbody>
+                </table>
+            </div>
         </section>
 
-        <section class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th data-sort="ItemName">
-                            Item
-                        </th>
 
-                        <th data-sort="Type">
-                            Type
-                        </th>
+        <!-- SELL TAB -->
 
-                        <th data-sort="Price">
-                            Price
-                        </th>
+        <section
+            id="sellTab"
+            class="tab-content"
+        >
+            <div class="summary">
+                <span id="sellCount">
+                    0 offers
+                </span>
+            </div>
 
-                        <th data-sort="Quantity">
-                            Qty
-                        </th>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-sort="ItemName">
+                                Item
+                            </th>
 
-                        <th data-sort="Currency">
-                            Currency
-                        </th>
+                            <th data-sort="Price">
+                                Price
+                            </th>
 
-                        <th data-sort="StoreName">
-                            Store
-                        </th>
-                    </tr>
-                </thead>
+                            <th data-sort="Quantity">
+                                Qty
+                            </th>
 
-                <tbody id="offersTableBody">
-                </tbody>
-            </table>
+                            <th data-sort="Currency">
+                                Currency
+                            </th>
+
+                            <th data-sort="StoreName">
+                                Store
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="sellTableBody">
+                    </tbody>
+                </table>
+            </div>
         </section>
+
+
+        <!-- Compare TAB -->
+
+        <section
+            id="compareTab"
+            class="tab-content"
+        >
+            <div id="transportCurrencies">
+            </div>
+        </section>
+
+
+        <!-- TRANSPORT TAB -->
+        <section
+            id="transportTab"
+            class="tab-content"
+        >
+            <div class="summary">
+                <span id="transportCount">
+                    0 routes
+                </span>
+            </div>
+
+            <div class="table-wrapper">
+                <table id="transportTable">
+                    <thead>
+                        <tr>
+                            <th data-route-sort="ItemName">
+                                Item
+                            </th>
+
+                            <th data-route-sort="Currency">
+                                Currency
+                            </th>
+
+                            <th data-route-sort="SourceStore">
+                                Buy From
+                            </th>
+
+                            <th data-route-sort="SourcePrice">
+                                Sale Price
+                            </th>
+
+                            <th data-route-sort="DestinationStore">
+                                Sell To
+                            </th>
+
+                            <th data-route-sort="DestinationPrice">
+                                Buy Price
+                            </th>
+
+                            <th data-route-sort="ProfitPerItem">
+                                Profit / Item
+                            </th>
+
+                            <th data-route-sort="Quantity">
+                                Qty
+                            </th>
+
+                            <th data-route-sort="Distance">
+                                Distance
+                            </th>
+
+                            <th>
+                                Source Status
+                            </th>
+
+                            <th>
+                                Destination Status
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="transportTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
     </main>
 
     <script src="app.js"></script>
