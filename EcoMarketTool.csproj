@@ -20,39 +20,48 @@
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
 
   <Reference Include="Eco.Client">
-    <HintPath>S:\SteamLibrary\steamapps\common\Eco\BepInEx\interop\Eco.Client.dll</HintPath>
+    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Eco.Client.dll</HintPath>
     <Private>false</Private>
   </Reference>
 
   <Reference Include="Eco.Client.Utils">
-    <HintPath>S:\SteamLibrary\steamapps\common\Eco\BepInEx\interop\Eco.Client.Utils.dll</HintPath>
+    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Eco.Client.Utils.dll</HintPath>
     <Private>false</Private>
   </Reference>
 
   <Reference Include="Eco.Shared">
-    <HintPath>S:\SteamLibrary\steamapps\common\Eco\BepInEx\interop\Eco.Shared.dll</HintPath>
+    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Eco.Shared.dll</HintPath>
     <Private>false</Private>
   </Reference>
 
   <Reference Include="Il2Cppmscorlib">
-    <HintPath>S:\SteamLibrary\steamapps\common\Eco\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
+    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
     <Private>false</Private>
   </Reference>
 
   <Reference Include="UnityEngine.CoreModule">
-    <HintPath>S:\SteamLibrary\steamapps\common\Eco\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
+    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
     <Private>false</Private>
   </Reference>	
-
+	
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Web\Static\" />
   </ItemGroup>
   
-  <ItemGroup>
-  <EmbeddedResource Include="Web\static\index.html" />
-  <EmbeddedResource Include="Web\static\app.js" />
-  <EmbeddedResource Include="Web\static\style.css" />
+<ItemGroup>
+  <EmbeddedResource Include="Web\Static\index.html">
+    <LogicalName>EcoMarketTools.Web.Static.index.html</LogicalName>
+  </EmbeddedResource>
+
+  <EmbeddedResource Include="Web\Static\app.js">
+    <LogicalName>EcoMarketTools.Web.Static.app.js</LogicalName>
+  </EmbeddedResource>
+
+  <EmbeddedResource Include="Web\Static\style.css">
+    <LogicalName>EcoMarketTools.Web.Static.style.css</LogicalName>
+  </EmbeddedResource>
 </ItemGroup>
+
 </Project>

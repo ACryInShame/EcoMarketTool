@@ -18,10 +18,37 @@ namespace EcoMarketTools
 
         private bool running;
 
+        private const bool DevelopmentMode = true;
+
+        private string WebIndexPath, WebAppPath, WebStylePath;
+
         public void Start()
         {
             if (running)
                 return;
+
+            if (DevelopmentMode)
+            {
+                WebIndexPath =
+                    @"C:\Users\redph\Documents\UnityProjects\EcoMarketTool\Web\Static\index.html";
+
+                WebAppPath =
+                    @"C:\Users\redph\Documents\UnityProjects\EcoMarketTool\Web\Static\app.js";
+
+                WebStylePath =
+                    @"C:\Users\redph\Documents\UnityProjects\EcoMarketTool\Web\Static\style.css";
+            }
+            else
+            {
+                WebIndexPath =
+                    "EcoMarketTools.Web.Static.index.html";
+
+                WebAppPath =
+                    "EcoMarketTools.Web.Static.app.js";
+
+                WebStylePath =
+                    "EcoMarketTools.Web.Static.style.css";
+            }
 
             listener.Prefixes.Add(
                 "http://127.0.0.1:8765/"
@@ -153,11 +180,11 @@ namespace EcoMarketTools
                 // -------------------------
 
                 if (path == "/" ||
-                    path == "/index.html")
+    path == "/index.html")
                 {
-                    ServeEmbeddedFile(
+                    ServeWebFile(
                         context,
-                        "EcoMarketTools.Web.static.index.html",
+                        WebIndexPath,
                         "text/html; charset=utf-8"
                     );
 
@@ -166,9 +193,9 @@ namespace EcoMarketTools
 
                 if (path == "/app.js")
                 {
-                    ServeEmbeddedFile(
+                    ServeWebFile(
                         context,
-                        "EcoMarketTools.Web.static.app.js",
+                        WebAppPath,
                         "application/javascript; charset=utf-8"
                     );
 
@@ -177,9 +204,9 @@ namespace EcoMarketTools
 
                 if (path == "/style.css")
                 {
-                    ServeEmbeddedFile(
+                    ServeWebFile(
                         context,
-                        "EcoMarketTools.Web.static.style.css",
+                        WebStylePath,
                         "text/css; charset=utf-8"
                     );
 
@@ -309,6 +336,67 @@ namespace EcoMarketTools
 
             context.Response.ContentType =
                 "application/json; charset=utf-8";
+
+            context.Response.ContentLength64 =
+                buffer.Length;
+
+            context.Response.OutputStream.Write(
+                buffer,
+                0,
+                buffer.Length
+            );
+
+            context.Response.OutputStream.Close();
+        }
+        private void ServeWebFile(
+HttpListenerContext context,
+string path,
+string contentType)
+        {
+            if (DevelopmentMode)
+            {
+                ServeDiskFile(
+                    context,
+                    path,
+                    contentType
+                );
+
+                return;
+            }
+
+            ServeEmbeddedFile(
+                context,
+                path,
+                contentType
+            );
+        }
+        private void ServeDiskFile(
+    HttpListenerContext context,
+    string filePath,
+    string contentType)
+        {
+            if (!File.Exists(filePath))
+            {
+                Plugin.PluginLog.LogWarning(
+                    $"[EcoMarketTools] Development web file not found: {filePath}"
+                );
+
+                WriteText(
+                    context,
+                    "File Not Found",
+                    404
+                );
+
+                return;
+            }
+
+            byte[] buffer =
+                File.ReadAllBytes(filePath);
+
+            context.Response.StatusCode = 200;
+
+            context.Response.ContentType =
+                contentType;
 
             context.Response.ContentLength64 =
                 buffer.Length;
