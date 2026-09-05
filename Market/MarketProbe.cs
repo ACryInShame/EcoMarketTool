@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
+
 
 namespace EcoMarketTools
 {
@@ -11,6 +13,30 @@ namespace EcoMarketTools
         public static MarketProbe Instance
         {
             get { return instance; }
+        }
+
+        public string PlayerName
+        {
+            get;
+            private set;
+        } = "";
+
+        public Vector3 PlayerPosition
+        {
+            get;
+            private set;
+        }
+
+        public int PlayerCurrentWeight
+        {
+            get;
+            private set;
+        }
+
+        public int PlayerMaxWeight
+        {
+            get;
+            private set;
         }
 
         private readonly List<MarketOffer> allOffers =
@@ -66,10 +92,7 @@ namespace EcoMarketTools
                 allOffers.Clear();
                 allOffers.AddRange(newOffers);
 
-                TEST();
-                Plugin.PluginLog.LogInfo(
-                    $"[EcoMarketTools] Loaded {allOffers.Count} valid market offers."
-                );
+                UpdatePlayerState();
             }
             catch (Exception ex)
             {
@@ -79,57 +102,64 @@ namespace EcoMarketTools
             }
         }
 
-        private void TEST ()
+        private void UpdatePlayerState()
         {
-            var filter = new MarketFilter
+            try
             {
-                Type = MarketOrderType.Sell,
-                ItemName = "Iron Ore",
-                Currency = "Crater Coin"
-            };
+                var player =
+                    Player.obj;
 
-            var offers =
-                MarketService.Filter(
-                    allOffers,
-                    filter
+                if (player == null)
+                {
+                    return;
+                }
+
+                PlayerName =
+                    player.UserName;
+
+                PlayerPosition =
+                    Player.WrappedPos;
+            }
+            catch (System.Exception ex)
+            {
+                Plugin.PluginLog.LogError(
+                    $"[EcoMarketTools] Player state failed: {ex}"
                 );
-
-            var stats =
-                MarketStatisticsService.Calculate(
-                    offers
-                );
-
-            Plugin.PluginLog.LogInfo(
-                $"[TEST] Iron Ore Sell Offers: {stats.OfferCount}"
-            );
-
-            Plugin.PluginLog.LogInfo(
-                $"[TEST] Min: {stats.Minimum}"
-            );
-
-            Plugin.PluginLog.LogInfo(
-                $"[TEST] Max: {stats.Maximum}"
-            );
-
-            Plugin.PluginLog.LogInfo(
-                $"[TEST] Mean: {stats.Mean}"
-            );
-
-            Plugin.PluginLog.LogInfo(
-                $"[TEST] Median: {stats.Median}"
-            );
-
-            Plugin.PluginLog.LogInfo(
-                $"[TEST] Mode: {stats.Mode}"
-            );
-
-            Plugin.PluginLog.LogInfo(
-                $"[TEST] Stores: {stats.StoreCount}"
-            );
-
-            Plugin.PluginLog.LogInfo(
-                $"[TEST] Quantity: {stats.TotalQuantity}"
-            );
+            }
         }
+
+        public void UpdatePlayerWeight(
+                    int currentWeight,
+                    int maxWeight)
+        {
+            PlayerCurrentWeight =
+                currentWeight;
+
+            PlayerMaxWeight =
+                maxWeight;
+        }
+
+        private void ProbeItemLink(
+    int itemId)
+{
+    try
+    {
+        string link =
+            ClientUILinks.UILinkItem(
+                itemId
+            );
+
+        Plugin.PluginLog.LogInfo(
+            $"[EcoMarketTools] Item {itemId} link: {link}"
+        );
+    }
+    catch (System.Exception ex)
+    {
+        Plugin.PluginLog.LogError(
+            $"[EcoMarketTools] Item link probe failed: {ex}"
+        );
+    }
+}
+
     }
 }

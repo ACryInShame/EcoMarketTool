@@ -4,8 +4,9 @@ let sortColumn = "ItemName";
 let sortAscending = true;
 let transportSortColumn = "ItemName";
 let transportSortAscending = true;
-let routeSortColumn = "ProfitPerItem";
-let routeSortAscending = false;
+
+//let routeSortColumn = "ProfitPerItem";
+//let routeSortAscending = false;
 
 
 // ---------------------------------
@@ -363,10 +364,15 @@ function applyFilters()
     );
 
     //transport tab
-    renderTransportRoutes(
-        sellOffers,
-        buyOffers
-)   ;
+    if (
+        window.TransportPlanner
+    )
+    {
+        TransportPlanner.render(
+            sellOffers,
+            buyOffers
+        );
+    }
 
     buyCount.textContent =
         `${buyOffers.length} offers`;
@@ -540,7 +546,7 @@ function renderNormalTable(
 
 
 // ---------------------------------
-// TRANSPORT
+// Compare
 // ---------------------------------
 
 function renderTransportCurrencies(
@@ -945,7 +951,7 @@ for (const header of sortableHeaders)
         }
     );
 }
-
+/*
 const routeHeaders =
     document.querySelectorAll(
         "th[data-route-sort]"
@@ -980,7 +986,7 @@ for (const header of routeHeaders)
             applyFilters();
         }
     );
-}
+}*/
 
 // ---------------------------------
 // TAB SWITCHING
@@ -1054,7 +1060,7 @@ for (const button of tabButtons)
 // ---------------------------------
 // TRANSPORT ROUTES
 // ---------------------------------
-
+/*
 function buildTransportRoutes(
     saleOffers,
     buyOffers)
@@ -1364,9 +1370,22 @@ function renderTransportRoutes(
     transportCount.textContent =
         `${routes.length} routes`;
 }
+*/
 
 // ---------------------------------
 // START
 // ---------------------------------
 
-loadOffers();
+async function startApp()
+{
+    if (
+        window.TransportPlanner
+    )
+    {
+        await TransportPlanner.init();
+    }
+
+    await loadOffers();
+}
+
+startApp();

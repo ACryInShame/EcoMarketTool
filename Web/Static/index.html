@@ -212,16 +212,79 @@
             id="transportTab"
             class="tab-content"
         >
-            <div class="summary">
+            <div class="transport-planner-header">
+
+                <div class="transport-origin-card">
+
+                    <div class="transport-label">
+                        Current Route Origin
+                    </div>
+
+                    <div
+                        id="transportOrigin"
+                        class="transport-origin-value"
+                    >
+                        Loading player position...
+                    </div>
+
+                    <div
+                        id="transportWeightSummary"
+                        class="transport-subtext"
+                    >
+                        Loading carry capacity...
+                    </div>
+
+                </div>
+
+
+                <div class="transport-route-controls">
+
+                    <button
+                        id="transportUndoButton"
+                        type="button"
+                    >
+                        Undo Last Leg
+                    </button>
+
+                    <button
+                        id="transportResetButton"
+                        type="button"
+                    >
+                        Reset Route
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="transportRouteSummary"
+                class="transport-route-summary"
+            >
+            </div>
+
+
+            <div class="table-header-row">
+
+                <h2>
+                    Candidate Routes
+                </h2>
+
                 <span id="transportCount">
                     0 routes
                 </span>
+
             </div>
 
+
             <div class="table-wrapper">
-                <table id="transportTable">
+
+                <table>
+
                     <thead>
                         <tr>
+
                             <th data-route-sort="ItemName">
                                 Item
                             </th>
@@ -235,7 +298,7 @@
                             </th>
 
                             <th data-route-sort="SourcePrice">
-                                Sale Price
+                                Buy Price
                             </th>
 
                             <th data-route-sort="DestinationStore">
@@ -243,19 +306,43 @@
                             </th>
 
                             <th data-route-sort="DestinationPrice">
-                                Buy Price
+                                Sell Price
                             </th>
 
                             <th data-route-sort="ProfitPerItem">
                                 Profit / Item
                             </th>
 
-                            <th data-route-sort="Quantity">
-                                Qty
+                            <th data-route-sort="ItemWeight">
+                                Item Weight
                             </th>
 
-                            <th data-route-sort="Distance">
-                                Distance
+                            <th data-route-sort="CarryQuantity">
+                                Carry Qty
+                            </th>
+
+                            <th data-route-sort="TradeQuantity">
+                                Trade Qty
+                            </th>
+
+                            <th data-route-sort="TripProfit">
+                                Trip Profit
+                            </th>
+
+                            <th data-route-sort="DistanceToPickup">
+                                To Pickup
+                            </th>
+
+                            <th data-route-sort="TradeDistance">
+                                Trade Distance
+                            </th>
+
+                            <th data-route-sort="TotalDistance">
+                                Total Distance
+                            </th>
+
+                            <th data-route-sort="ProfitPerDistance">
+                                Profit / Distance
                             </th>
 
                             <th>
@@ -265,17 +352,29 @@
                             <th>
                                 Destination Status
                             </th>
+
+                            <th>
+                                Route
+                            </th>
+
                         </tr>
                     </thead>
 
-                    <tbody id="transportTableBody">
+
+                    <tbody
+                        id="transportTableBody"
+                    >
                     </tbody>
+
                 </table>
+
             </div>
+
         </section>
 
     </main>
 
-    <script src="app.js"></script>
+    <script src="/transport.js"></script>
+    <script src="/app.js"></script>
 </body>
 </html>

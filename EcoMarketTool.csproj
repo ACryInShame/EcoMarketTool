@@ -58,6 +58,10 @@
   <EmbeddedResource Include="Web\Static\app.js">
     <LogicalName>EcoMarketTools.Web.Static.app.js</LogicalName>
   </EmbeddedResource>
+  
+   <EmbeddedResource Include="Web\Static\transport.js">
+    <LogicalName>EcoMarketTools.Web.Static.transport.js</LogicalName>
+  </EmbeddedResource>
 
   <EmbeddedResource Include="Web\Static\style.css">
     <LogicalName>EcoMarketTools.Web.Static.style.css</LogicalName>

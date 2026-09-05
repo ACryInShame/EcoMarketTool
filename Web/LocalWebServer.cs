@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
+using UnityEngine;
+using static Interop;
 
 namespace EcoMarketTools
 {
@@ -20,7 +22,8 @@ namespace EcoMarketTools
 
         private const bool DevelopmentMode = true;
 
-        private string WebIndexPath, WebAppPath, WebStylePath;
+        private string WebIndexPath, WebAppPath, WebStylePath, WebTransportPath;
+
 
         public void Start()
         {
@@ -37,6 +40,9 @@ namespace EcoMarketTools
 
                 WebStylePath =
                     @"C:\Users\redph\Documents\UnityProjects\EcoMarketTool\Web\Static\style.css";
+
+                WebTransportPath =
+                    @"C:\Users\redph\Documents\UnityProjects\EcoMarketTool\Web\Static\transport.js";
             }
             else
             {
@@ -48,6 +54,8 @@ namespace EcoMarketTools
 
                 WebStylePath =
                     "EcoMarketTools.Web.Static.style.css";
+                WebTransportPath =
+                    "EcoMarketTools.Web.Static.transport.js";
             }
 
             listener.Prefixes.Add(
@@ -175,6 +183,15 @@ namespace EcoMarketTools
                     return;
                 }
 
+                if (path == "/api/player")
+                {
+                    ServePlayer(
+                        context
+                    );
+
+                    return;
+                }
+
                 // -------------------------
                 // WEB FILES
                 // -------------------------
@@ -208,6 +225,20 @@ namespace EcoMarketTools
                         context,
                         WebStylePath,
                         "text/css; charset=utf-8"
+                    );
+
+                    return;
+                }
+
+                if (
+                    path ==
+                    "/transport.js"
+                )
+                {
+                    ServeWebFile(
+                        context,
+                        WebTransportPath,
+                        "application/javascript"
                     );
 
                     return;
@@ -349,9 +380,9 @@ namespace EcoMarketTools
             context.Response.OutputStream.Close();
         }
         private void ServeWebFile(
-HttpListenerContext context,
-string path,
-string contentType)
+                    HttpListenerContext context,
+                    string path,
+                    string contentType)
         {
             if (DevelopmentMode)
             {
@@ -371,9 +402,9 @@ string contentType)
             );
         }
         private void ServeDiskFile(
-    HttpListenerContext context,
-    string filePath,
-    string contentType)
+                    HttpListenerContext context,
+                    string filePath,
+                    string contentType)
         {
             if (!File.Exists(filePath))
             {
@@ -405,6 +436,62 @@ string contentType)
                 buffer,
                 0,
                 buffer.Length
+            );
+
+            context.Response.OutputStream.Close();
+        }
+
+        private void ServePlayer(
+    HttpListenerContext context)
+        {
+            var probe =
+                MarketProbe.Instance;
+
+            var position =
+                probe.PlayerPosition;
+
+            var dto =
+                new
+                {
+                    Name =
+                        probe.PlayerName,
+
+                    X =
+                        position.x,
+
+                    Y =
+                        position.y,
+
+                    Z =
+                        position.z,
+
+                    CurrentWeight =
+                        0,
+
+                    MaxWeight =
+                        0
+                };
+
+            string json =
+                JsonSerializer.Serialize(
+                    dto
+                );
+
+            byte[] bytes =
+                Encoding.UTF8.GetBytes(
+                    json
+                );
+
+            context.Response.ContentType =
+                "application/json";
+
+            context.Response.ContentLength64 =
+                bytes.Length;
+
+            context.Response.OutputStream.Write(
+                bytes,
+                0,
+                bytes.Length
             );
 
             context.Response.OutputStream.Close();
