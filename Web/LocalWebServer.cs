@@ -1,9 +1,11 @@
 ﻿using System;
-using System.Net;
-using System.Text;
-using System.Threading;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Reflection;
+using System.Text;
 using System.Text.Json;
+using System.Threading;
 
 namespace EcoMarketTools
 {
@@ -29,7 +31,9 @@ namespace EcoMarketTools
 
             running = true;
 
-            serverThread = new Thread(ServerLoop);
+            serverThread =
+                new Thread(ServerLoop);
+
             serverThread.IsBackground = true;
             serverThread.Start();
 
@@ -95,15 +99,10 @@ namespace EcoMarketTools
                     context.Request.Url?.AbsolutePath
                     ?? "/";
 
-                if (path == "/")
-                {
-                    WriteText(
-                        context,
-                        "Eco Market Tools is running."
-                    );
+                // -------------------------
+                // API
+                // -------------------------
 
-                    return;
-                }
                 if (path == "/api/offers")
                 {
                     var offers =
@@ -113,8 +112,10 @@ namespace EcoMarketTools
                                 ItemId = o.ItemId,
                                 ItemName = o.ItemName,
                                 Type = o.Type.ToString(),
+
                                 Price = o.Price,
                                 Quantity = o.Quantity,
+
                                 Currency = o.Currency,
                                 StoreName = o.StoreName,
 
@@ -122,10 +123,17 @@ namespace EcoMarketTools
                                 Y = o.StorePosition.y,
                                 Z = o.StorePosition.z,
 
-                                StoreBalance = o.StoreBalance,
-                                LimitedFunds = o.LimitedFunds,
-                                LimitedStorage = o.LimitedStorage,
-                                Authorized = o.Authorized
+                                StoreBalance =
+                                    o.StoreBalance,
+
+                                LimitedFunds =
+                                    o.LimitedFunds,
+
+                                LimitedStorage =
+                                    o.LimitedStorage,
+
+                                Authorized =
+                                    o.Authorized
                             })
                             .ToList();
 
@@ -139,41 +147,48 @@ namespace EcoMarketTools
 
                     return;
                 }
-                if (path == "/api/offers")
+
+                // -------------------------
+                // WEB FILES
+                // -------------------------
+
+                if (path == "/" ||
+                    path == "/index.html")
                 {
-                    var offers =
-                        MarketProbe.Instance.AllOffers
-                            .Select(o => new MarketOfferDto
-                            {
-                                ItemId = o.ItemId,
-                                ItemName = o.ItemName,
-                                Type = o.Type.ToString(),
-                                Price = o.Price,
-                                Quantity = o.Quantity,
-                                Currency = o.Currency,
-                                StoreName = o.StoreName,
-
-                                X = o.StorePosition.x,
-                                Y = o.StorePosition.y,
-                                Z = o.StorePosition.z,
-
-                                StoreBalance = o.StoreBalance,
-                                LimitedFunds = o.LimitedFunds,
-                                LimitedStorage = o.LimitedStorage,
-                                Authorized = o.Authorized
-                            })
-                            .ToList();
-
-                    string json =
-                        JsonSerializer.Serialize(offers);
-
-                    WriteJson(
+                    ServeEmbeddedFile(
                         context,
-                        json
+                        "EcoMarketTools.Web.static.index.html",
+                        "text/html; charset=utf-8"
                     );
 
                     return;
                 }
+
+                if (path == "/app.js")
+                {
+                    ServeEmbeddedFile(
+                        context,
+                        "EcoMarketTools.Web.static.app.js",
+                        "application/javascript; charset=utf-8"
+                    );
+
+                    return;
+                }
+
+                if (path == "/style.css")
+                {
+                    ServeEmbeddedFile(
+                        context,
+                        "EcoMarketTools.Web.static.style.css",
+                        "text/css; charset=utf-8"
+                    );
+
+                    return;
+                }
+
+                // -------------------------
+                // NOT FOUND
+                // -------------------------
 
                 WriteText(
                     context,
@@ -200,6 +215,59 @@ namespace EcoMarketTools
                     // Ignore response failure.
                 }
             }
+        }
+
+        private void ServeEmbeddedFile(
+            HttpListenerContext context,
+            string resourceName,
+            string contentType)
+        {
+            Assembly assembly =
+                typeof(Plugin).Assembly;
+
+            using Stream stream =
+                assembly.GetManifestResourceStream(
+                    resourceName
+                );
+
+            if (stream == null)
+            {
+                Plugin.PluginLog.LogWarning(
+                    $"[EcoMarketTools] Embedded resource not found: {resourceName}"
+                );
+
+                WriteText(
+                    context,
+                    "File Not Found",
+                    404
+                );
+
+                return;
+            }
+
+            using MemoryStream memoryStream =
+                new MemoryStream();
+
+            stream.CopyTo(memoryStream);
+
+            byte[] buffer =
+                memoryStream.ToArray();
+
+            context.Response.StatusCode = 200;
+
+            context.Response.ContentType =
+                contentType;
+
+            context.Response.ContentLength64 =
+                buffer.Length;
+
+            context.Response.OutputStream.Write(
+                buffer,
+                0,
+                buffer.Length
+            );
+
+            context.Response.OutputStream.Close();
         }
 
         private void WriteText(
@@ -229,9 +297,9 @@ namespace EcoMarketTools
         }
 
         private void WriteJson(
-        HttpListenerContext context,
-        string json,
-        int statusCode = 200)
+            HttpListenerContext context,
+            string json,
+            int statusCode = 200)
         {
             byte[] buffer =
                 Encoding.UTF8.GetBytes(json);

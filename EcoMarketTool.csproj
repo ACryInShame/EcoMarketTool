@@ -43,6 +43,16 @@
     <HintPath>S:\SteamLibrary\steamapps\common\Eco\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
     <Private>false</Private>
   </Reference>	
-	
+
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Web\Static\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+  <EmbeddedResource Include="Web\static\index.html" />
+  <EmbeddedResource Include="Web\static\app.js" />
+  <EmbeddedResource Include="Web\static\style.css" />
+</ItemGroup>
 </Project>

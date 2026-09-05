@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Eco Market Tools</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main class="container">
+        <h1>Eco Market Tools</h1>
+
+        <section class="filters">
+            <div class="filter-group">
+                <label for="itemFilter">
+                    Item
+                </label>
+
+                <input
+                    id="itemFilter"
+                    type="text"
+                    placeholder="Iron Ore"
+                >
+            </div>
+
+            <div class="filter-group">
+                <label for="typeFilter">
+                    Type
+                </label>
+
+                <select id="typeFilter">
+                    <option value="">
+                        All
+                    </option>
+
+                    <option value="Buy">
+                        Buy
+                    </option>
+
+                    <option value="Sell">
+                        Sell
+                    </option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="currencyFilter">
+                    Currency
+                </label>
+
+                <select id="currencyFilter">
+                    <option value="">
+                        All
+                    </option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="storeFilter">
+                    Store
+                </label>
+
+                <input
+                    id="storeFilter"
+                    type="text"
+                    placeholder="Store name"
+                >
+            </div>
+        </section>
+
+        <section class="summary">
+            <span id="offerCount">
+                Loading...
+            </span>
+        </section>
+
+        <section class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th data-sort="ItemName">
+                            Item
+                        </th>
+
+                        <th data-sort="Type">
+                            Type
+                        </th>
+
+                        <th data-sort="Price">
+                            Price
+                        </th>
+
+                        <th data-sort="Quantity">
+                            Qty
+                        </th>
+
+                        <th data-sort="Currency">
+                            Currency
+                        </th>
+
+                        <th data-sort="StoreName">
+                            Store
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody id="offersTableBody">
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
