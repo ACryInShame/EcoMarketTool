@@ -1,16 +1,18 @@
+// @ts-check
+
 let allOffers = [];
 
+// Buy and Sell sort variables
 let sortColumn = "ItemName";
 let sortAscending = true;
+
+// Transport sorts variables
 let transportSortColumn = "ItemName";
 let transportSortAscending = true;
 
-//let routeSortColumn = "ProfitPerItem";
-//let routeSortAscending = false;
-
 
 // ---------------------------------
-// ELEMENTS
+// Element References from HTML
 // ---------------------------------
 
 const itemFilter =
