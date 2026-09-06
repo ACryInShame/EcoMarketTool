@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>EcoMarketTool</AssemblyName>
-    <Product>My first plugin</Product>
+    <Product>EcoMarketTool</Product>
     <Version>1.0.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
@@ -13,34 +13,64 @@
       https://nuget.samboy.dev/v3/index.json
     </RestoreAdditionalProjectSources>
     <RootNamespace>EcoMarketTool</RootNamespace>
-  </PropertyGroup>
+
+<!-- ====================================================== -->
+<!-- DEVELOPMENT MACHINE                                    -->
+<!-- Uncomment ONE EcoProjectPath.                                 -->
+<!-- ====================================================== -->
+  
+    <!-- TOWER -->
+  <EcoProjectPath>L:\Unity\EcoMarketTool</EcoProjectPath>
+  <EcoGamePath>S:\SteamLibrary\steamapps\common\Eco</EcoGamePath>
+
+  <!-- LAPTOP -->
+  <EcoProjectPath>L:\Unity\EcoMarketTool</EcoProjectPath>
+  <!--   <EcoGamePath>C:\Program Files (x86)\Steam\steamapps\common\Eco</EcoGamePath> -->
+  
+  <!-- ====================================================== -->
+  <!-- DERIVED PATHS - normally do not change these.          -->
+  <!-- ====================================================== -->
+  <BepInExPath>$(EcoGamePath)\BepInEx</BepInExPath>
+  <InteropPath>$(BepInExPath)\interop</InteropPath>
+  <PluginPath>$(BepInExPath)\plugins\EcoMarketTools</PluginPath>
+  
+  </PropertyGroup>  
+  
+  <ItemGroup>
+  <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+    <_Parameter1>EcoProjectPath</_Parameter1>
+    <_Parameter2>$(EcoProjectPath)</_Parameter2>
+  </AssemblyAttribute>
+</ItemGroup>
+  
+  
 
   <ItemGroup>
     <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
 
   <Reference Include="Eco.Client">
-    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Eco.Client.dll</HintPath>
+    <HintPath>$(BepInExPath)\interop\Eco.Client.dll</HintPath>
     <Private>false</Private>
   </Reference>
 
   <Reference Include="Eco.Client.Utils">
-    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Eco.Client.Utils.dll</HintPath>
+    <HintPath>$(BepInExPath)\interop\Eco.Client.Utils.dll</HintPath>
     <Private>false</Private>
   </Reference>
 
   <Reference Include="Eco.Shared">
-    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Eco.Shared.dll</HintPath>
+    <HintPath>$(BepInExPath)\interop\Eco.Shared.dll</HintPath>
     <Private>false</Private>
   </Reference>
 
   <Reference Include="Il2Cppmscorlib">
-    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
+    <HintPath>$(BepInExPath)\interop\Il2Cppmscorlib.dll</HintPath>
     <Private>false</Private>
   </Reference>
 
   <Reference Include="UnityEngine.CoreModule">
-    <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Eco\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
+    <HintPath>$(BepInExPath)\interop\UnityEngine.CoreModule.dll</HintPath>
     <Private>false</Private>
   </Reference>	
 	

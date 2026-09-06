@@ -32,17 +32,19 @@ namespace EcoMarketTools
 
             if (DevelopmentMode)
             {
+                string webRoot =Path.Combine(GetProjectPath(),"Web","Static");
+
                 WebIndexPath =
-                    @"C:\Users\redph\Documents\UnityProjects\EcoMarketTool\Web\Static\index.html";
+                    Path.Combine(webRoot, "index.html");
 
                 WebAppPath =
-                    @"C:\Users\redph\Documents\UnityProjects\EcoMarketTool\Web\Static\app.js";
+                    Path.Combine(webRoot, "app.js"); 
 
                 WebStylePath =
-                    @"C:\Users\redph\Documents\UnityProjects\EcoMarketTool\Web\Static\style.css";
+                    Path.Combine(webRoot, "style.css");
 
                 WebTransportPath =
-                    @"C:\Users\redph\Documents\UnityProjects\EcoMarketTool\Web\Static\transport.js";
+                    Path.Combine(webRoot, "transport.js");
             }
             else
             {
@@ -75,6 +77,22 @@ namespace EcoMarketTools
             Plugin.PluginLog.LogInfo(
                 "[EcoMarketTools] Local web server started at http://127.0.0.1:8765/"
             );
+        }
+
+        //allows us to change project path based on project file
+        private string GetProjectPath()
+        {
+            var assembly = typeof(LocalWebServer).Assembly;
+
+            foreach (
+                var attribute in assembly.GetCustomAttributes<
+                    System.Reflection.AssemblyMetadataAttribute>())
+            {
+                if (attribute.Key == "EcoProjectPath")
+                    return attribute.Value ?? "";
+            }
+
+            return "";
         }
 
         public void Stop()
