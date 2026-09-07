@@ -9,17 +9,20 @@ using UnityEngine;
 namespace EcoMarketTools
 {
     [BepInPlugin(
-        "com.lou.EcoMarketTools",
+        "com.ACryInShame.EcoMarketTools",
         "Eco Market Tools",
         "0.1.0"
     )]
 
     public class Plugin : BasePlugin
     {
+        // Logs for Plugin
         internal static ManualLogSource PluginLog;
 
+        // Used to hook into game methods
         private Harmony harmony;
 
+        // used to host local web server
         private LocalWebServer webServer;
 
 
@@ -27,17 +30,17 @@ namespace EcoMarketTools
         {
             PluginLog = Log;
 
-            Log.LogInfo(
+            PluginLog.LogInfo(
                 "[EcoMarketTools] Client plugin loaded!"
             );
 
             harmony = new Harmony(
-                "com.lou.EcoMarketTools"
+                "com.ACryInShame.EcoMarketTools"
             );
 
             harmony.PatchAll();
 
-            Log.LogInfo(
+            PluginLog.LogInfo(
                 "[EcoMarketTools] Harmony patches applied."
             );
 

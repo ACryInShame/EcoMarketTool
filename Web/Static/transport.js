@@ -2,27 +2,19 @@
 
 const TransportPlanner =
 {
-    saleOffers:
-        [],
+    saleOffers: [],
 
-    buyOffers:
-        [],
+    buyOffers: [],
 
-    playerInfo:
-        null,
+    playerInfo: null,
 
-    origin:
-        null,
+    origin: null,
 
-    route:
-        [],
+    route: [],
 
-    sortColumn:
-        "ProfitPerDistance",
+    sortColumn: "ProfitPerDistance",
 
-    sortAscending:
-        false,
-
+    sortAscending: false,
 
     // ---------------------------------
     // INITIALIZE
@@ -47,43 +39,30 @@ const TransportPlanner =
         try
         {
             const response =
-                await fetch(
-                    "/api/player"
-                );
+                await fetch( "/api/player" );
 
             if (!response.ok)
             {
-                console.warn(
-                    "Player endpoint unavailable."
-                );
+                console.warn("Player endpoint unavailable.");
 
                 return;
             }
 
-            this.playerInfo =
-                await response.json();
+            this.playerInfo = await response.json();
 
-            if (
-                this.route.length === 0
-            )
+            if ( this.route.length === 0 )
             {
                 this.origin =
                 {
-                    Type:
-                        "Player",
+                    Type:"Player",
 
-                    Name:
-                        this.playerInfo.Name ||
-                        "Current Player Position",
+                    Name:this.playerInfo.Name ||"Current Player Position",
 
-                    X:
-                        this.playerInfo.X,
+                    X:this.playerInfo.X,
 
-                    Y:
-                        this.playerInfo.Y,
+                    Y:this.playerInfo.Y,
 
-                    Z:
-                        this.playerInfo.Z
+                    Z:this.playerInfo.Z
                 };
             }
         }
@@ -101,27 +80,17 @@ const TransportPlanner =
     // MAIN RENDER ENTRY
     // ---------------------------------
 
-    render(
-        saleOffers,
-        buyOffers)
+    render(saleOffers,buyOffers)
     {
-        this.saleOffers =
-            saleOffers;
+        this.saleOffers = saleOffers;
 
-        this.buyOffers =
-            buyOffers;
+        this.buyOffers = buyOffers;
 
-        const routes =
-            this.buildRoutes();
+        const routes = this.buildRoutes();
 
-        const sortedRoutes =
-            this.sortRoutes(
-                routes
-            );
+        const sortedRoutes = this.sortRoutes(routes);
 
-        this.renderRoutes(
-            sortedRoutes
-        );
+        this.renderRoutes(sortedRoutes);
 
         this.updateSummary();
     },
@@ -135,110 +104,62 @@ const TransportPlanner =
     {
         const routes = [];
 
-        for (
-            const source
-            of this.saleOffers
-        )
+        for (const source of this.saleOffers )
         {
-            for (
-                const destination
-                of this.buyOffers
-            )
+            for ( const destination of this.buyOffers )
             {
-                if (
-                    !this.sameItem(
-                        source,
-                        destination
-                    )
-                )
+                // if not Authorized on either ignore
+                if (!source.Authorized || !destination.Authorized)
+                    continue;
+
+
+                // if not same item ignore
+                if ( !this.sameItem(source, destination) )
                 {
                     continue;
                 }
 
-                if (
-                    source.Currency !==
-                    destination.Currency
-                )
+                //if not same currency ignore
+                if ( source.Currency !==  destination.Currency )
                 {
                     continue;
                 }
 
-                if (
-                    this.sameStore(
-                        source,
-                        destination
-                    )
-                )
+                /** uf they are the same location, its free money
+                if ( this.sameStore( source, destination) )
                 {
                     continue;
-                }
+                }*/
 
 
-                const profitPerItem =
-                    destination.Price -
-                    source.Price;
+                //check if there is a profit 
+                const profitPerItem = destination.Price - source.Price;
 
-                if (
-                    profitPerItem <= 0
-                )
+                if ( profitPerItem <= 0 )
                 {
                     continue;
                 }
 
 
-                const marketQuantity =
-                    Math.min(
-                        source.Quantity,
-                        destination.Quantity
-                    );
+                const marketQuantity = Math.min( source.Quantity, destination.Quantity );
 
-                if (
-                    marketQuantity <= 0
-                )
+                if ( marketQuantity <= 0 )
                 {
                     continue;
                 }
 
 
-                const distanceToPickup =
-                    this.origin
-                    ?
-                    this.getDistance(
-                        this.origin,
-                        source
-                    )
-                    :
-                    0;
+                const distanceToPickup =  this.origin? this.getDistance( this.origin, source ) : 9999;
 
+                const tradeDistance = this.getDistance( source, destination );
 
-                const tradeDistance =
-                    this.getDistance(
-                        source,
-                        destination
-                    );
+                const totalDistance = distanceToPickup + tradeDistance;
 
+                const itemWeight = this.getItemWeight( source, destination );
 
-                const totalDistance =
-                    distanceToPickup +
-                    tradeDistance;
+                const carryQuantity = this.getCarryQuantity( itemWeight );
 
-
-                const itemWeight =
-                    this.getItemWeight(
-                        source,
-                        destination
-                    );
-
-
-                const carryQuantity =
-                    this.getCarryQuantity(
-                        itemWeight
-                    );
-
-
-                let tradeQuantity =
-                    marketQuantity;
-
+                let tradeQuantity = marketQuantity;
 
                 if (
                     carryQuantity !==
@@ -270,42 +191,44 @@ const TransportPlanner =
                         tripProfit /
                         totalDistance;
                 }
+               
+                if ( destination.LimitedStorage || !destination.Authorized )
+                {
+                    continue;
+                }
+                
+                let destinationQuantity = destination.Quantity;
 
+                if ( destination.LimitedFunds && destination.Price > 0 )
+                {
+                    const affordableQuantity = Math.floor(destination.StoreBalance / destination.Price );
+
+                    destinationQuantity = Math.min( destinationQuantity, affordableQuantity );
+                }
 
                 routes.push(
                     {
-                        ItemId:
-                            source.ItemId,
+                        ItemId: source.ItemId,
 
-                        ItemName:
-                            source.ItemName,
+                        ItemName: source.ItemName,
 
-                        Currency:
-                            source.Currency,
+                        Currency: source.Currency,
 
-                        SourceStore:
-                            source.StoreName,
+                        SourceStore: source.StoreName,
 
-                        DestinationStore:
-                            destination.StoreName,
+                        DestinationStore: destination.StoreName,
 
-                        SourcePrice:
-                            source.Price,
+                        SourcePrice: source.Price,
 
-                        DestinationPrice:
-                            destination.Price,
+                        DestinationPrice: destination.Price,
 
-                        ProfitPerItem:
-                            profitPerItem,
+                        ProfitPerItem: profitPerItem,
 
-                        MarketQuantity:
-                            marketQuantity,
+                        MarketQuantity: marketQuantity,
 
-                        ItemWeight:
-                            itemWeight,
+                        ItemWeight: itemWeight,
 
-                        CarryQuantity:
-                            carryQuantity,
+                        CarryQuantity: carryQuantity,
 
                         TradeQuantity:
                             tradeQuantity,
@@ -353,27 +276,15 @@ const TransportPlanner =
     // ITEM MATCH
     // ---------------------------------
 
-    sameItem(
-        source,
-        destination)
+    sameItem( source, destination)
     {
-        if (
-            source.ItemId !==
-            undefined &&
-            destination.ItemId !==
-            undefined
-        )
+        /*
+        if ( source.ItemId !== undefined && destination.ItemId !== undefined )
         {
-            return (
-                source.ItemId ===
-                destination.ItemId
-            );
-        }
+            return ( source.ItemId === destination.ItemId );
+        }*/
 
-        return (
-            source.ItemName ===
-            destination.ItemName
-        );
+        return ( source.ItemName === destination.ItemName );
     },
 
 
@@ -442,73 +353,33 @@ const TransportPlanner =
 
     getFreeCapacity()
     {
-        if (
-            !this.playerInfo
-        )
-        {
+        if ( !this.playerInfo)
             return null;
-        }
 
-        const maxWeight =
-            Number(
-                this.playerInfo.MaxWeight
-            );
+        const maxWeight = Number( this.playerInfo.MaxWeight );
 
-        const currentWeight =
-            Number(
-                this.playerInfo.CurrentWeight
-            );
+        const currentWeight = Number(this.playerInfo.CurrentWeight );
 
 
-        if (
-            !Number.isFinite(
-                maxWeight
-            ) ||
-            !Number.isFinite(
-                currentWeight
-            )
-        )
-        {
+        if ( !Number.isFinite(maxWeight) ||!Number.isFinite(currentWeight) )
             return null;
-        }
 
-        return Math.max(
-            0,
-            maxWeight -
-            currentWeight
-        );
+        return Math.max( 0, maxWeight - currentWeight );
     },
 
 
-    getCarryQuantity(
-        itemWeight)
+    getCarryQuantity( itemWeight)
     {
-        if (
-            !itemWeight ||
-            itemWeight <= 0
-        )
-        {
+        if ( !itemWeight || itemWeight <= 0 )
             return null;
-        }
+
+        const freeCapacity = this.getFreeCapacity();
 
 
-        const freeCapacity =
-            this.getFreeCapacity();
-
-
-        if (
-            freeCapacity ===
-            null
-        )
-        {
+        if ( freeCapacity === null )
             return null;
-        }
 
-
-        return Math.floor(
-            freeCapacity /
-            itemWeight
-        );
+        return Math.floor( freeCapacity / itemWeight);
     },
 
 
@@ -669,7 +540,21 @@ const TransportPlanner =
             row.className =
                 "transport-route-row";
 
+            const headers = document.querySelectorAll( "#transportTab th[data-route-sort]" );
 
+            for (const header of headers)
+            {
+                const column = header.dataset.routeSort;
+
+                this.addCell(
+                    row,
+                    this.getRouteDisplayValue(
+                        route,
+                        column
+                    )
+                );
+            }
+            /*
             this.addCell(
                 row,
                 route.ItemName
@@ -795,7 +680,7 @@ const TransportPlanner =
             this.addCell(
                 row,
                 route.DestinationStatus
-            );
+            );*/
 
 
             const actionCell =
@@ -1030,10 +915,7 @@ const TransportPlanner =
             );
 
 
-        const weightSummary =
-            document.getElementById(
-                "transportWeightSummary"
-            );
+        const weightSummary = document.getElementById( "transportWeightSummary" );
 
 
         if (
@@ -1049,20 +931,14 @@ const TransportPlanner =
         }
 
 
-        if (
-            weightSummary
-        )
+        if ( weightSummary )
         {
-            const freeCapacity =
-                this.getFreeCapacity();
+            const freeCapacity = this.getFreeCapacity();
 
 
-            if (
-                freeCapacity === null
-            )
+            if ( freeCapacity === null )
             {
-                weightSummary.textContent =
-                    "Carry capacity unavailable";
+                weightSummary.textContent = "Carry capacity unavailable";
             }
             else
             {
@@ -1074,12 +950,8 @@ const TransportPlanner =
         }
 
 
-        if (
-            !routeSummary
-        )
-        {
+        if ( !routeSummary )
             return;
-        }
 
 
         if (
@@ -1340,7 +1212,96 @@ const TransportPlanner =
 
 
         return div.innerHTML;
+    },
+
+    getRouteDisplayValue(
+    route,
+    column)
+
+{
+    switch (column)
+    {
+        case "ItemName":
+            return route.ItemName;
+
+        case "Currency":
+            return route.Currency;
+
+        case "SourceStore":
+            return route.SourceStore;
+
+        case "SourcePrice":
+            return formatNumber(
+                route.SourcePrice
+            );
+
+        case "DestinationStore":
+            return route.DestinationStore;
+
+        case "DestinationPrice":
+            return formatNumber(
+                route.DestinationPrice
+            );
+
+        case "ProfitPerItem":
+            return formatNumber(
+                route.ProfitPerItem
+            );
+
+        case "ItemWeight":
+            return route.ItemWeight === null
+                ? "-"
+                : formatNumber(
+                    route.ItemWeight
+                );
+
+        case "CarryQuantity":
+            return route.CarryQuantity === null
+                ? "-"
+                : formatNumber(
+                    route.CarryQuantity
+                );
+
+        case "TradeQuantity":
+            return formatNumber(
+                route.TradeQuantity
+            );
+
+        case "TripProfit":
+            return formatNumber(
+                route.TripProfit
+            );
+
+        case "DistanceToPickup":
+            return formatNumber(
+                route.DistanceToPickup
+            );
+
+        case "TradeDistance":
+            return formatNumber(
+                route.TradeDistance
+            );
+
+        case "TotalDistance":
+            return formatNumber(
+                route.TotalDistance
+            );
+
+        case "ProfitPerDistance":
+            return formatNumber(
+                route.ProfitPerDistance
+            );
+
+        case "SourceStatus":
+            return route.SourceStatus;
+
+        case "DestinationStatus":
+            return route.DestinationStatus;
+
+        default:
+            return "";
     }
+},
 };
 
 

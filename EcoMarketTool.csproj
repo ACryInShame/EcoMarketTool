@@ -16,16 +16,16 @@
 
 <!-- ====================================================== -->
 <!-- DEVELOPMENT MACHINE                                    -->
-<!-- Uncomment ONE EcoProjectPath.                                 -->
+<!-- Uncomment ONE EcoProjectPath.                          -->
 <!-- ====================================================== -->
   
     <!-- TOWER -->
-  <EcoProjectPath>L:\Unity\EcoMarketTool</EcoProjectPath>
-  <EcoGamePath>S:\SteamLibrary\steamapps\common\Eco</EcoGamePath>
+  <!-- <EcoProjectPath>L:\Unity\EcoMarketTool</EcoProjectPath>
+  <EcoGamePath>S:\SteamLibrary\steamapps\common\Eco</EcoGamePath>-->
 
   <!-- LAPTOP -->
-  <EcoProjectPath>L:\Unity\EcoMarketTool</EcoProjectPath>
-  <!--   <EcoGamePath>C:\Program Files (x86)\Steam\steamapps\common\Eco</EcoGamePath> -->
+  <EcoProjectPath>C:\Users\redph\Documents\UnityProjects\EcoMarketTool</EcoProjectPath>
+  <EcoGamePath>C:\Program Files (x86)\Steam\steamapps\common\Eco</EcoGamePath>
   
   <!-- ====================================================== -->
   <!-- DERIVED PATHS - normally do not change these.          -->
@@ -41,8 +41,8 @@
     <_Parameter1>EcoProjectPath</_Parameter1>
     <_Parameter2>$(EcoProjectPath)</_Parameter2>
   </AssemblyAttribute>
-</ItemGroup>
-  
+</ItemGroup>  
+   
   
 
   <ItemGroup>
@@ -75,27 +75,20 @@
   </Reference>	
 	
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Web\Static\" />
-  </ItemGroup>
   
 <ItemGroup>
-  <EmbeddedResource Include="Web\Static\index.html">
-    <LogicalName>EcoMarketTools.Web.Static.index.html</LogicalName>
-  </EmbeddedResource>
-
-  <EmbeddedResource Include="Web\Static\app.js">
-    <LogicalName>EcoMarketTools.Web.Static.app.js</LogicalName>
-  </EmbeddedResource>
-  
-   <EmbeddedResource Include="Web\Static\transport.js">
-    <LogicalName>EcoMarketTools.Web.Static.transport.js</LogicalName>
-  </EmbeddedResource>
 
   <EmbeddedResource Include="Web\Static\style.css">
     <LogicalName>EcoMarketTools.Web.Static.style.css</LogicalName>
   </EmbeddedResource>
+</ItemGroup>
+  
+<ItemGroup>
+  <EditorConfigFiles Remove="C:\Users\redph\Documents\UnityProjects\EcoMarketTool\.editorconfig" />
+</ItemGroup>
+  
+<ItemGroup>
+  <None Include="C:\Users\redph\Documents\UnityProjects\EcoMarketTool\.editorconfig" />
 </ItemGroup>
 
 </Project>

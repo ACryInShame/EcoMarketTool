@@ -2,11 +2,11 @@
 
 let allOffers = [];
 
-// Buy and Sell sort variables
+// Buy and Sale sort variables
 let sortColumn = "ItemName";
 let sortAscending = true;
 
-// Transport sorts variables
+// Compare sort variables
 let transportSortColumn = "ItemName";
 let transportSortAscending = true;
 
@@ -40,9 +40,9 @@ const buyTableBody =
         "buyTableBody"
     );
 
-const sellTableBody =
+const saleTableBody =
     document.getElementById(
-        "sellTableBody"
+        "saleTableBody"
     );
 
 const buyCount =
@@ -50,24 +50,14 @@ const buyCount =
         "buyCount"
     );
 
-const sellCount =
+const saleCount =
     document.getElementById(
-        "sellCount"
+        "saleCount"
     );
 
 const transportCurrencies =
     document.getElementById(
         "transportCurrencies"
-    );
-
-const transportTableBody =
-document.getElementById(
-    "transportTableBody"
-);
-
-const transportCount =
-    document.getElementById(
-        "transportCount"
     );
 
 
@@ -125,35 +115,35 @@ function populateItems()
         [...new Set(
             allOffers
                 .map(
-                    o => o.ItemName
+                    Offer => Offer.ItemName
                 )
                 .filter(
-                    name => name
+                    Name => Name
                 )
         )]
         .sort(
-            (a, b) =>
-                a.localeCompare(b)
+            (A, B) =>
+                A.localeCompare(B)
         );
 
     itemFilter.innerHTML =
         '<option value="">All Items</option>';
 
-    for (const item of items)
+    for (const Item of items)
     {
-        const option =
+        const Option =
             document.createElement(
                 "option"
             );
 
-        option.value =
-            item;
+        Option.value =
+            Item;
 
-        option.textContent =
-            item;
+        Option.textContent =
+            Item;
 
         itemFilter.appendChild(
-            option
+            Option
         );
     }
 }
@@ -169,35 +159,35 @@ function populateCurrencies()
         [...new Set(
             allOffers
                 .map(
-                    o => o.Currency
+                    Offer => Offer.Currency
                 )
                 .filter(
-                    currency => currency
+                    Currency => Currency
                 )
         )]
         .sort(
-            (a, b) =>
-                a.localeCompare(b)
+            (A, B) =>
+                A.localeCompare(B)
         );
 
     currencyFilter.innerHTML =
         '<option value="">All Currencies</option>';
 
-    for (const currency of currencies)
+    for (const Currency of currencies)
     {
-        const option =
+        const Option =
             document.createElement(
                 "option"
             );
 
-        option.value =
-            currency;
+        Option.value =
+            Currency;
 
-        option.textContent =
-            currency;
+        Option.textContent =
+            Currency;
 
         currencyFilter.appendChild(
-            option
+            Option
         );
     }
 }
@@ -207,14 +197,14 @@ function populateCurrencies()
 // PLAYER CREDIT
 // ---------------------------------
 
-function isPlayerCredit(currency)
+function isPlayerCredit(Currency)
 {
-    if (!currency)
+    if (!Currency)
     {
         return false;
     }
 
-    return currency
+    return Currency
         .trim()
         .toLowerCase()
         .endsWith(
@@ -222,42 +212,44 @@ function isPlayerCredit(currency)
         );
 }
 
+
 // ---------------------------------
-// Offer Status
+// OFFER STATUS
 // ---------------------------------
 
-function getOfferStatus(offer)
+function getOfferStatus(Offer)
 {
-    const statuses = [];
+    const Statuses = [];
 
-    if (offer.LimitedFunds)
+    if (Offer.LimitedFunds)
     {
-        statuses.push(
+        Statuses.push(
             "Limited Funds"
         );
     }
 
-    if (offer.LimitedStorage)
+    if (Offer.LimitedStorage)
     {
-        statuses.push(
+        Statuses.push(
             "Limited Storage"
         );
     }
 
-    if (!offer.Authorized)
+    if (!Offer.Authorized)
     {
-        statuses.push(
+        Statuses.push(
             "Not Authorized"
         );
     }
 
-    if (statuses.length === 0)
+    if (Statuses.length === 0)
     {
         return "Available";
     }
 
-    return statuses.join(", ");
+    return Statuses.join(", ");
 }
+
 
 // ---------------------------------
 // FILTERING
@@ -265,50 +257,50 @@ function getOfferStatus(offer)
 
 function applyFilters()
 {
-    const selectedItem =
+    const SelectedItem =
         itemFilter.value;
 
-    const selectedCurrency =
+    const SelectedCurrency =
         currencyFilter.value;
 
-    const storeSearch =
+    const StoreSearch =
         storeFilter.value
             .trim()
             .toLowerCase();
 
-    const filtered =
+    const Filtered =
         allOffers.filter(
-            offer =>
+            Offer =>
             {
                 if (
-                    selectedItem &&
-                    offer.ItemName !==
-                    selectedItem
+                    SelectedItem &&
+                    Offer.ItemName !==
+                    SelectedItem
                 )
                 {
                     return false;
                 }
 
                 if (
-                    selectedCurrency &&
-                    offer.Currency !==
-                    selectedCurrency
+                    SelectedCurrency &&
+                    Offer.Currency !==
+                    SelectedCurrency
                 )
                 {
                     return false;
                 }
 
-                const storeName =
+                const StoreName =
                     (
-                        offer.StoreName ||
+                        Offer.StoreName ||
                         ""
                     )
                     .toLowerCase();
 
                 if (
-                    storeSearch &&
-                    !storeName.includes(
-                        storeSearch
+                    StoreSearch &&
+                    !StoreName.includes(
+                        StoreSearch
                     )
                 )
                 {
@@ -318,7 +310,7 @@ function applyFilters()
                 if (
                     hidePlayerCredit.checked &&
                     isPlayerCredit(
-                        offer.Currency
+                        Offer.Currency
                     )
                 )
                 {
@@ -330,97 +322,104 @@ function applyFilters()
         );
 
 
-    const buyOffers =
+    // Eco Sale:
+    // Store is selling -> Player buys from store.
+    const SaleOffers =
         sortOffers(
-            filtered.filter(
-                offer =>
-                    offer.Type ===
-                    "Buy"
-            )
-        );
-
-    const sellOffers =
-        sortOffers(
-            filtered.filter(
-                offer =>
-                    offer.Type ===
+            Filtered.filter(
+                Offer =>
+                    Offer.Type ===
                     "Sell"
             )
         );
 
 
+    // Eco Buy:
+    // Store is buying -> Player sells to store.
+    const BuyOffers =
+        sortOffers(
+            Filtered.filter(
+                Offer =>
+                    Offer.Type ===
+                    "Buy"
+            )
+        );
+
+
+    renderNormalTable(
+        saleTableBody,
+        SaleOffers
+    );
+
     renderNormalTable(
         buyTableBody,
-        buyOffers
+        BuyOffers
     );
 
-    renderNormalTable(
-        sellTableBody,
-        sellOffers
-    );
 
-    //compare tab
+    // Compare tab
     renderTransportCurrencies(
-        sellOffers,
-        buyOffers
+        SaleOffers,
+        BuyOffers
     );
 
-    //transport tab
+
+    // Transport planner
     if (
         window.TransportPlanner
     )
     {
         TransportPlanner.render(
-            sellOffers,
-            buyOffers
+            SaleOffers,
+            BuyOffers
         );
     }
 
-    buyCount.textContent =
-        `${buyOffers.length} offers`;
 
-    sellCount.textContent =
-        `${sellOffers.length} offers`;
+    saleCount.textContent =
+        `${SaleOffers.length} offers`;
+
+    buyCount.textContent =
+        `${BuyOffers.length} offers`;
 }
 
 
-
 // ---------------------------------
-// SORTING
+// NORMAL TABLE SORTING
 // ---------------------------------
 
-function sortOffers(offers)
+function sortOffers(Offers)
 {
-    return [...offers]
+    return [...Offers]
         .sort(
-            (a, b) =>
+            (A, B) =>
             {
-                let aValue =
-                    a[sortColumn];
+                let AValue =
+                    A[sortColumn];
 
-                let bValue =
-                    b[sortColumn];
+                let BValue =
+                    B[sortColumn];
 
                 if (
-                    typeof aValue ===
+                    typeof AValue ===
                     "string"
                 )
                 {
-                    aValue =
-                        aValue
+                    AValue =
+                        AValue
                             .toLowerCase();
 
-                    bValue =
+                    BValue =
                         (
-                            bValue ||
+                            BValue ||
                             ""
                         )
                         .toLowerCase();
                 }
 
                 if (
-                    aValue <
-                    bValue
+                    AValue <
+                    BValue
                 )
                 {
                     return sortAscending
@@ -429,8 +428,8 @@ function sortOffers(offers)
                 }
 
                 if (
-                    aValue >
-                    bValue
+                    AValue >
+                    BValue
                 )
                 {
                     return sortAscending
@@ -443,38 +442,47 @@ function sortOffers(offers)
         );
 }
 
-function sortTransportOffers(offers)
-{
-    return [...offers]
-        .sort(
-            (a, b) =>
-            {
-                let aValue =
-                    a[transportSortColumn];
 
-                let bValue =
-                    b[transportSortColumn];
+// ---------------------------------
+// COMPARE SORTING
+// ---------------------------------
+
+function sortTransportOffers(Offers)
+{
+    return [...Offers]
+        .sort(
+            (A, B) =>
+            {
+                let AValue =
+                    A[transportSortColumn];
+
+                let BValue =
+                    B[transportSortColumn];
 
                 if (
-                    typeof aValue === "string"
+                    typeof AValue ===
+                    "string"
                 )
                 {
-                    aValue =
-                        aValue.toLowerCase();
+                    AValue =
+                        AValue.toLowerCase();
 
-                    bValue =
-                        (bValue || "")
-                            .toLowerCase();
+                    BValue =
+                        (
+                            BValue ||
+                            ""
+                        )
+                        .toLowerCase();
                 }
 
-                if (aValue < bValue)
+                if (AValue < BValue)
                 {
                     return transportSortAscending
                         ? -1
                         : 1;
                 }
 
-                if (aValue > bValue)
+                if (AValue > BValue)
                 {
                     return transportSortAscending
                         ? 1
@@ -488,162 +496,173 @@ function sortTransportOffers(offers)
 
 
 // ---------------------------------
-// BUY / SELL TABLES
+// BUY / SALE TABLES
 // ---------------------------------
 
 function renderNormalTable(
-    tableBody,
-    offers)
+    TableBody,
+    Offers)
 {
-    tableBody.innerHTML = "";
-
-    for (const offer of offers)
+    if (!TableBody)
     {
-        const row =
+        return;
+    }
+
+    TableBody.innerHTML = "";
+
+    for (const Offer of Offers)
+    {
+        const Row =
             document.createElement(
                 "tr"
             );
 
         addCell(
-            row,
-            offer.ItemName
+            Row,
+            Offer.ItemName
         );
 
         addCell(
-            row,
+            Row,
             formatNumber(
-                offer.Price
+                Offer.Price
             )
         );
 
         addCell(
-            row,
+            Row,
             formatNumber(
-                offer.Quantity
+                Offer.Quantity
             )
         );
 
         addCell(
-            row,
-            offer.Currency
+            Row,
+            Offer.Currency
         );
 
         addCell(
-            row,
-            offer.StoreName
+            Row,
+            Offer.StoreName
         );
 
         addCell(
-            row,
+            Row,
             getOfferStatus(
-                offer
+                Offer
             )
         );
 
-        tableBody.appendChild(
-            row
+        TableBody.appendChild(
+            Row
         );
     }
 }
 
 
 // ---------------------------------
-// Compare
+// COMPARE
 // ---------------------------------
 
 function renderTransportCurrencies(
-    sellOffers,
-    buyOffers)
+    SaleOffers,
+    BuyOffers)
 {
+    if (!transportCurrencies)
+    {
+        return;
+    }
+
     transportCurrencies.innerHTML =
         "";
 
-    const currencies =
+    const Currencies =
         [...new Set(
             [
-                ...sellOffers.map(
-                    offer =>
-                        offer.Currency
+                ...SaleOffers.map(
+                    Offer =>
+                        Offer.Currency
                 ),
 
-                ...buyOffers.map(
-                    offer =>
-                        offer.Currency
+                ...BuyOffers.map(
+                    Offer =>
+                        Offer.Currency
                 )
             ]
             .filter(
-                currency =>
-                    currency
+                Currency =>
+                    Currency
             )
         )]
         .sort(
-            (a, b) =>
-                a.localeCompare(b)
+            (A, B) =>
+                A.localeCompare(B)
         );
 
 
-    for (const currency of currencies)
+    for (const Currency of Currencies)
     {
-        const currencySellOffers =
+        const CurrencySaleOffers =
             sortTransportOffers(
-                sellOffers.filter(
-                    offer =>
-                        offer.Currency ===
-                        currency
+                SaleOffers.filter(
+                    Offer =>
+                        Offer.Currency ===
+                        Currency
                 )
             );
 
-        const currencyBuyOffers =
+        const CurrencyBuyOffers =
             sortTransportOffers(
-                buyOffers.filter(
-                    offer =>
-                        offer.Currency ===
-                        currency
+                BuyOffers.filter(
+                    Offer =>
+                        Offer.Currency ===
+                        Currency
                 )
             );
 
 
-        const section =
+        const Section =
             document.createElement(
                 "section"
             );
 
-        section.className =
+        Section.className =
             "transport-currency";
 
 
-        const heading =
+        const Heading =
             document.createElement(
                 "h2"
             );
 
-        heading.textContent =
-            currency;
+        Heading.textContent =
+            Currency;
 
-        section.appendChild(
-            heading
+        Section.appendChild(
+            Heading
         );
 
 
-        const grid =
+        const Grid =
             document.createElement(
                 "div"
             );
 
-        grid.className =
+        Grid.className =
             "transport-grid";
 
 
         // -------------------------
         // SALE PANEL
+        // Store selling / Buy From
         // -------------------------
 
-        const sellPanel =
+        const SalePanel =
             document.createElement(
                 "div"
             );
 
-        sellPanel.innerHTML = `
+        SalePanel.innerHTML = `
             <h3>Sale (Buy From) Orders</h3>
 
             <div class="table-wrapper">
@@ -673,27 +692,28 @@ function renderTransportCurrencies(
             </div>
         `;
 
-        const sellBody =
-            sellPanel.querySelector(
+        const SaleBody =
+            SalePanel.querySelector(
                 "tbody"
             );
 
         renderTransportTable(
-            sellBody,
-            currencySellOffers
+            SaleBody,
+            CurrencySaleOffers
         );
 
 
         // -------------------------
         // BUY PANEL
+        // Store buying / Sell To
         // -------------------------
 
-        const buyPanel =
+        const BuyPanel =
             document.createElement(
                 "div"
             );
 
-        buyPanel.innerHTML = `
+        BuyPanel.innerHTML = `
             <h3>Buy (Sell To) Orders</h3>
 
             <div class="table-wrapper">
@@ -723,62 +743,54 @@ function renderTransportCurrencies(
             </div>
         `;
 
-        const buyBody =
-            buyPanel.querySelector(
+        const BuyBody =
+            BuyPanel.querySelector(
                 "tbody"
             );
 
         renderTransportTable(
-            buyBody,
-            currencyBuyOffers
+            BuyBody,
+            CurrencyBuyOffers
         );
 
 
-        grid.appendChild(
-            sellPanel
+        Grid.appendChild(
+            SalePanel
         );
 
-        grid.appendChild(
-            buyPanel
+        Grid.appendChild(
+            BuyPanel
         );
 
-        section.appendChild(
-            grid
+        Section.appendChild(
+            Grid
         );
 
-        transportCurrencies
-            .appendChild(
-                section
-            );
+        transportCurrencies.appendChild(
+            Section
+        );
     }
 
 
-    // ---------------------------------
-    // COMPARE TABLE SORT EVENTS
-    // ---------------------------------
-    //
-    // These headers are created above,
-    // so attach the handlers AFTER all
-    // currency sections exist.
-
-    const transportHeaders =
+    // Headers are dynamically created above.
+    const TransportHeaders =
         transportCurrencies
             .querySelectorAll(
                 "th[data-transport-sort]"
             );
 
-    for (const header of transportHeaders)
+    for (const Header of TransportHeaders)
     {
-        header.addEventListener(
+        Header.addEventListener(
             "click",
             () =>
             {
-                const column =
-                    header.dataset.transportSort;
+                const Column =
+                    Header.dataset.transportSort;
 
                 if (
                     transportSortColumn ===
-                    column
+                    Column
                 )
                 {
                     transportSortAscending =
@@ -787,7 +799,7 @@ function renderTransportCurrencies(
                 else
                 {
                     transportSortColumn =
-                        column;
+                        Column;
 
                     transportSortAscending =
                         true;
@@ -800,46 +812,54 @@ function renderTransportCurrencies(
 }
 
 
+// ---------------------------------
+// COMPARE TABLE
+// ---------------------------------
 
 function renderTransportTable(
-    tableBody,
-    offers)
+    TableBody,
+    Offers)
 {
-    tableBody.innerHTML = "";
-
-    for (const offer of offers)
+    if (!TableBody)
     {
-        const row =
+        return;
+    }
+
+    TableBody.innerHTML = "";
+
+    for (const Offer of Offers)
+    {
+        const Row =
             document.createElement(
                 "tr"
             );
 
         addCell(
-            row,
-            offer.ItemName
+            Row,
+            Offer.ItemName
         );
 
         addCell(
-            row,
+            Row,
             formatNumber(
-                offer.Price
+                Offer.Price
             )
         );
 
         addCell(
-            row,
+            Row,
             formatNumber(
-                offer.Quantity
+                Offer.Quantity
             )
         );
 
         addCell(
-            row,
-            offer.StoreName
+            Row,
+            Offer.StoreName
         );
 
-        tableBody.appendChild(
-            row
+        TableBody.appendChild(
+            Row
         );
     }
 }
@@ -850,35 +870,35 @@ function renderTransportTable(
 // ---------------------------------
 
 function addCell(
-    row,
-    value)
+    Row,
+    Value)
 {
-    const cell =
+    const Cell =
         document.createElement(
             "td"
         );
 
-    cell.textContent =
-        value ?? "";
+    Cell.textContent =
+        Value ?? "";
 
-    row.appendChild(
-        cell
+    Row.appendChild(
+        Cell
     );
 }
 
 
-function formatNumber(value)
+function formatNumber(Value)
 {
     if (
-        value === null ||
-        value === undefined ||
-        Number.isNaN(value)
+        Value === null ||
+        Value === undefined ||
+        Number.isNaN(Value)
     )
     {
         return "";
     }
 
-    return Number(value)
+    return Number(Value)
         .toLocaleString(
             undefined,
             {
@@ -918,23 +938,23 @@ hidePlayerCredit.addEventListener(
 // TABLE SORT EVENTS
 // ---------------------------------
 
-const sortableHeaders =
+const SortableHeaders =
     document.querySelectorAll(
         "th[data-sort]"
     );
 
-for (const header of sortableHeaders)
+for (const Header of SortableHeaders)
 {
-    header.addEventListener(
+    Header.addEventListener(
         "click",
         () =>
         {
-            const column =
-                header.dataset.sort;
+            const Column =
+                Header.dataset.sort;
 
             if (
                 sortColumn ===
-                column
+                Column
             )
             {
                 sortAscending =
@@ -943,7 +963,7 @@ for (const header of sortableHeaders)
             else
             {
                 sortColumn =
-                    column;
+                    Column;
 
                 sortAscending =
                     true;
@@ -953,104 +973,63 @@ for (const header of sortableHeaders)
         }
     );
 }
-/*
-const routeHeaders =
-    document.querySelectorAll(
-        "th[data-route-sort]"
-    );
 
-for (const header of routeHeaders)
-{
-    header.addEventListener(
-        "click",
-        () =>
-        {
-            const column =
-                header.dataset.routeSort;
-
-            if (
-                routeSortColumn ===
-                column
-            )
-            {
-                routeSortAscending =
-                    !routeSortAscending;
-            }
-            else
-            {
-                routeSortColumn =
-                    column;
-
-                routeSortAscending =
-                    true;
-            }
-
-            applyFilters();
-        }
-    );
-}*/
 
 // ---------------------------------
 // TAB SWITCHING
 // ---------------------------------
 
-const tabButtons =
+const TabButtons =
     document.querySelectorAll(
         ".tab-button"
     );
 
-const tabContents =
+const TabContents =
     document.querySelectorAll(
         ".tab-content"
     );
 
-for (const button of tabButtons)
+for (const Button of TabButtons)
 {
-    button.addEventListener(
+    Button.addEventListener(
         "click",
         () =>
         {
-            const tab =
-                button.dataset.tab;
+            const Tab =
+                Button.dataset.tab;
 
-            for (
-                const otherButton
-                of tabButtons
-            )
+            for (const OtherButton of TabButtons)
             {
-                otherButton
+                OtherButton
                     .classList
                     .remove(
                         "active"
                     );
             }
 
-            for (
-                const content
-                of tabContents
-            )
+            for (const Content of TabContents)
             {
-                content
+                Content
                     .classList
                     .remove(
                         "active"
                     );
             }
 
-            button
+            Button
                 .classList
                 .add(
                     "active"
                 );
 
-            const selectedTab =
+            const SelectedTab =
                 document.getElementById(
-                    `${tab}Tab`
+                    `${Tab}Tab`
                 );
 
-            if (selectedTab)
+            if (SelectedTab)
             {
-                selectedTab
+                SelectedTab
                     .classList
                     .add(
                         "active"
@@ -1059,320 +1038,7 @@ for (const button of tabButtons)
         }
     );
 }
-// ---------------------------------
-// TRANSPORT ROUTES
-// ---------------------------------
-/*
-function buildTransportRoutes(
-    saleOffers,
-    buyOffers)
-{
-    const routes = [];
 
-    for (const source of saleOffers)
-    {
-        for (const destination of buyOffers)
-        {
-            // Must be the same item.
-            if (
-                source.ItemName !==
-                destination.ItemName
-            )
-            {
-                continue;
-            }
-
-            // Must use the same currency.
-            if (
-                source.Currency !==
-                destination.Currency
-            )
-            {
-                continue;
-            }
-
-            // No point transporting back
-            // to the same store.
-            if (
-                source.StoreName ===
-                destination.StoreName
-            )
-            {
-                continue;
-            }
-
-            const profitPerItem =
-                destination.Price -
-                source.Price;
-
-            // Only show profitable routes.
-            if (
-                profitPerItem <= 0
-            )
-            {
-                continue;
-            }
-
-            const quantity =
-                Math.min(
-                    source.Quantity,
-                    destination.Quantity
-                );
-
-            if (
-                quantity <= 0
-            )
-            {
-                continue;
-            }
-
-            const distance =
-                getDistance(
-                    source,
-                    destination
-                );
-
-            routes.push(
-                {
-                    ItemName:
-                        source.ItemName,
-
-                    Currency:
-                        source.Currency,
-
-                    SourceStore:
-                        source.StoreName,
-
-                    SourcePrice:
-                        source.Price,
-
-                    DestinationStore:
-                        destination.StoreName,
-
-                    DestinationPrice:
-                        destination.Price,
-
-                    ProfitPerItem:
-                        profitPerItem,
-
-                    Quantity:
-                        quantity,
-
-                    PotentialProfit:
-                        profitPerItem *
-                        quantity,
-
-                    Distance:
-                        distance,
-
-                    SourceStatus:
-                        getOfferStatus(
-                            source
-                        ),
-
-                    DestinationStatus:
-                        getOfferStatus(
-                            destination
-                        ),
-
-                    SourceOffer:
-                        source,
-
-                    DestinationOffer:
-                        destination
-                }
-            );
-        }
-    }
-
-    return routes;
-}
-
-
-function getDistance(
-    source,
-    destination)
-{
-    const dx =
-        destination.X -
-        source.X;
-
-    const dy =
-        destination.Y -
-        source.Y;
-
-    const dz =
-        destination.Z -
-        source.Z;
-
-    return Math.sqrt(
-        dx * dx +
-        dy * dy +
-        dz * dz
-    );
-}
-
-
-function sortTransportRoutes(
-    routes)
-{
-    return [...routes]
-        .sort(
-            (a, b) =>
-            {
-                let aValue =
-                    a[routeSortColumn];
-
-                let bValue =
-                    b[routeSortColumn];
-
-                if (
-                    typeof aValue ===
-                    "string"
-                )
-                {
-                    aValue =
-                        aValue
-                            .toLowerCase();
-
-                    bValue =
-                        (
-                            bValue ||
-                            ""
-                        )
-                        .toLowerCase();
-                }
-
-                if (
-                    aValue <
-                    bValue
-                )
-                {
-                    return routeSortAscending
-                        ? -1
-                        : 1;
-                }
-
-                if (
-                    aValue >
-                    bValue
-                )
-                {
-                    return routeSortAscending
-                        ? 1
-                        : -1;
-                }
-
-                return 0;
-            }
-        );
-}
-
-
-function renderTransportRoutes(
-    saleOffers,
-    buyOffers)
-{
-    if (
-        !transportTableBody
-    )
-    {
-        return;
-    }
-
-    const routes =
-        sortTransportRoutes(
-            buildTransportRoutes(
-                saleOffers,
-                buyOffers
-            )
-        );
-
-    transportTableBody.innerHTML =
-        "";
-
-    for (const route of routes)
-    {
-        const row =
-            document.createElement(
-                "tr"
-            );
-
-        addCell(
-            row,
-            route.ItemName
-        );
-
-        addCell(
-            row,
-            route.Currency
-        );
-
-        addCell(
-            row,
-            route.SourceStore
-        );
-
-        addCell(
-            row,
-            formatNumber(
-                route.SourcePrice
-            )
-        );
-
-        addCell(
-            row,
-            route.DestinationStore
-        );
-
-        addCell(
-            row,
-            formatNumber(
-                route.DestinationPrice
-            )
-        );
-
-        addCell(
-            row,
-            formatNumber(
-                route.ProfitPerItem
-            )
-        );
-
-        addCell(
-            row,
-            formatNumber(
-                route.Quantity
-            )
-        );
-
-        addCell(
-            row,
-            formatNumber(
-                route.Distance
-            )
-        );
-
-        addCell(
-            row,
-            route.SourceStatus
-        );
-
-        addCell(
-            row,
-            route.DestinationStatus
-        );
-
-        transportTableBody
-            .appendChild(
-                row
-            );
-    }
-
-    transportCount.textContent =
-        `${routes.length} routes`;
-}
-*/
 
 // ---------------------------------
 // START

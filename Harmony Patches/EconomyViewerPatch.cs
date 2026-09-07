@@ -3,12 +3,13 @@
 namespace EcoMarketTools
 {
     [HarmonyPatch(
-        typeof(EconomyViewerUI),
-        nameof(EconomyViewerUI.Init)
+        typeof(EconomyViewerUI),        //class to hook to
+        nameof(EconomyViewerUI.Init)    //method to hook to
     )]
     public static class EconomyViewerPatch
     {
         [HarmonyPostfix]
+        // Hook to run after the Ecnomy View is opened
         public static void Postfix(
             EconomyViewerUI __instance)
         {
@@ -16,8 +17,7 @@ namespace EcoMarketTools
                 "[EcoMarketTools] Economy Viewer Init detected."
             );
 
-            MarketProbe.Instance
-                .PullMarketData(__instance);
+            MarketProbe.Instance.PullMarketData(__instance.EconomyTrackerView);
         }
     }
 }

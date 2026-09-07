@@ -63,7 +63,10 @@ h1 {
 }
 
 .table-wrapper {
+    max-height: calc(100vh - 300px);
+
     overflow-x: auto;
+    overflow-y: auto;
 
     background: white;
 

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
@@ -17,13 +18,17 @@
 
 <body>
     <main class="container">
+
         <h1>Eco Market Tools</h1>
+
+
+        <!-- TABS -->
 
         <div class="tabs">
 
             <button
                 class="tab-button active"
-                data-tab="Sale"
+                data-tab="sale"
             >
                 Sale (Buy From)
             </button>
@@ -48,34 +53,50 @@
             >
                 Transport
             </button>
+
         </div>
 
+
+        <!-- FILTERS -->
+
         <section class="filters">
+
             <div class="filter-group">
+
                 <label for="itemFilter">
                     Item
                 </label>
 
                 <select id="itemFilter">
+
                     <option value="">
                         All Items
                     </option>
+
                 </select>
+
             </div>
 
+
             <div class="filter-group">
+
                 <label for="currencyFilter">
                     Currency
                 </label>
 
                 <select id="currencyFilter">
+
                     <option value="">
                         All Currencies
                     </option>
+
                 </select>
+
             </div>
 
+
             <div class="filter-group">
+
                 <label for="storeFilter">
                     Store
                 </label>
@@ -85,37 +106,123 @@
                     type="text"
                     placeholder="Store name"
                 >
+
             </div>
 
+
             <div class="filter-group">
+
                 <label>
+
                     <input
                         id="hidePlayerCredit"
                         type="checkbox"
                     >
 
                     Hide Player Credit
+
                 </label>
+
             </div>
+
         </section>
 
 
-        <!-- BUY TAB -->
+        <!-- ---------------------------------
+             SALE TAB
+             Store is selling.
+             Player buys from store.
+        ---------------------------------- -->
+
+        <section
+            id="saleTab"
+            class="tab-content active"
+        >
+
+            <div class="summary">
+
+                <span id="saleCount">
+                    0 offers
+                </span>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th data-sort="ItemName">
+                                Item
+                            </th>
+
+                            <th data-sort="Price">
+                                Price
+                            </th>
+
+                            <th data-sort="Quantity">
+                                Qty
+                            </th>
+
+                            <th data-sort="Currency">
+                                Currency
+                            </th>
+
+                            <th data-sort="StoreName">
+                                Store
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="saleTableBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ---------------------------------
+             BUY TAB
+             Store is buying.
+             Player sells to store.
+        ---------------------------------- -->
 
         <section
             id="buyTab"
-            class="tab-content active"
+            class="tab-content"
         >
+
             <div class="summary">
+
                 <span id="buyCount">
                     0 offers
                 </span>
+
             </div>
 
+
             <div class="table-wrapper">
+
                 <table>
+
                     <thead>
+
                         <tr>
+
                             <th data-sort="ItemName">
                                 Item
                             </th>
@@ -135,84 +242,54 @@
                             <th data-sort="StoreName">
                                 Store
                             </th>
+
                             <th>
                                 Status
                             </th>
+
                         </tr>
+
                     </thead>
+
 
                     <tbody id="buyTableBody">
                     </tbody>
+
                 </table>
+
             </div>
+
         </section>
 
 
-        <!-- Sale TAB -->
-
-        <section
-            id="SaleTab"
-            class="tab-content"
-        >
-            <div class="summary">
-                <span id="SaleCount">
-                    0 offers
-                </span>
-            </div>
-
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th data-sort="ItemName">
-                                Item
-                            </th>
-
-                            <th data-sort="Price">
-                                Price
-                            </th>
-
-                            <th data-sort="Quantity">
-                                Qty
-                            </th>
-
-                            <th data-sort="Currency">
-                                Currency
-                            </th>
-
-                            <th data-sort="StoreName">
-                                Store
-                            </th>
-                            <th>
-                                Status
-                            </th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="SaleTableBody">
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-
-        <!-- Compare TAB -->
+        <!-- ---------------------------------
+             COMPARE TAB
+        ---------------------------------- -->
 
         <section
             id="compareTab"
             class="tab-content"
         >
+
             <div id="transportCurrencies">
             </div>
+
         </section>
 
 
-        <!-- TRANSPORT TAB -->
+        <!-- ---------------------------------
+             TRANSPORT TAB
+        ---------------------------------- -->
+
         <section
             id="transportTab"
             class="tab-content"
         >
+
             <div class="transport-planner-header">
+
+
+                <!-- CURRENT ROUTE ORIGIN -->
 
                 <div class="transport-origin-card">
 
@@ -237,6 +314,8 @@
                 </div>
 
 
+                <!-- ROUTE CONTROLS -->
+
                 <div class="transport-route-controls">
 
                     <button
@@ -258,12 +337,16 @@
             </div>
 
 
+            <!-- CURRENT ROUTE -->
+
             <div
                 id="transportRouteSummary"
                 class="transport-route-summary"
             >
             </div>
 
+
+            <!-- CANDIDATE ROUTES -->
 
             <div class="table-header-row">
 
@@ -283,14 +366,11 @@
                 <table>
 
                     <thead>
+
                         <tr>
 
                             <th data-route-sort="ItemName">
                                 Item
-                            </th>
-
-                            <th data-route-sort="Currency">
-                                Currency
                             </th>
 
                             <th data-route-sort="SourceStore">
@@ -325,6 +405,10 @@
                                 Trade Qty
                             </th>
 
+                            <th data-route-sort="Currency">
+                                Currency
+                            </th>
+
                             <th data-route-sort="TripProfit">
                                 Trip Profit
                             </th>
@@ -345,25 +429,24 @@
                                 Profit / Distance
                             </th>
 
-                            <th>
+                            <th data-route-sort="SourceStatus">
                                 Source Status
                             </th>
 
-                            <th>
+                            <th data-route-sort="DestinationStatus">
                                 Destination Status
                             </th>
 
-                            <th>
+                            <th data-route-action="add">
                                 Route
                             </th>
 
                         </tr>
+
                     </thead>
 
 
-                    <tbody
-                        id="transportTableBody"
-                    >
+                    <tbody id="transportTableBody">
                     </tbody>
 
                 </table>
@@ -374,7 +457,11 @@
 
     </main>
 
+
+    <!-- JAVASCRIPT -->
+
     <script src="/transport.js"></script>
     <script src="/app.js"></script>
+
 </body>
 </html>

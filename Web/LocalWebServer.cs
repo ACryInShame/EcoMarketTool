@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EcoMarketTool;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -7,7 +8,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using UnityEngine;
-using static Interop;
 
 namespace EcoMarketTools
 {
@@ -68,8 +68,7 @@ namespace EcoMarketTools
 
             running = true;
 
-            serverThread =
-                new Thread(ServerLoop);
+            serverThread = new Thread(ServerLoop);
 
             serverThread.IsBackground = true;
             serverThread.Start();
@@ -120,8 +119,7 @@ namespace EcoMarketTools
             {
                 try
                 {
-                    HttpListenerContext context =
-                        listener.GetContext();
+                    HttpListenerContext context = listener.GetContext();
 
                     HandleRequest(context);
                 }
@@ -159,34 +157,34 @@ namespace EcoMarketTools
                 if (path == "/api/offers")
                 {
                     var offers =
-                        MarketProbe.Instance.AllOffers
-                            .Select(o => new MarketOfferDto
+                        MarketProbe.Instance.AllMarketOffers
+                            .Select(MODTO => new MarketOfferDto
                             {
-                                ItemId = o.ItemId,
-                                ItemName = o.ItemName,
-                                Type = o.Type.ToString(),
+                                ItemId = MODTO.ItemId,
+                                ItemName = MODTO.ItemName,
+                                Type = MODTO.OrderType.ToString(),
 
-                                Price = o.Price,
-                                Quantity = o.Quantity,
+                                Price = MODTO.Price,
+                                Quantity = MODTO.Quantity,
 
-                                Currency = o.Currency,
-                                StoreName = o.StoreName,
+                                Currency = MODTO.Currency,
+                                StoreName = MODTO.StoreName,
 
-                                X = o.StorePosition.x,
-                                Y = o.StorePosition.y,
-                                Z = o.StorePosition.z,
+                                X = MODTO.StorePosition.x,
+                                Y = MODTO.StorePosition.y,
+                                Z = MODTO.StorePosition.z,
 
                                 StoreBalance =
-                                    o.StoreBalance,
+                                    MODTO.StoreBalance,
 
                                 LimitedFunds =
-                                    o.LimitedFunds,
+                                    MODTO.LimitedFunds,
 
                                 LimitedStorage =
-                                    o.LimitedStorage,
+                                    MODTO.LimitedStorage,
 
                                 Authorized =
-                                    o.Authorized
+                                    MODTO.Authorized
                             })
                             .ToList();
 
@@ -203,9 +201,7 @@ namespace EcoMarketTools
 
                 if (path == "/api/player")
                 {
-                    ServePlayer(
-                        context
-                    );
+                    ServePlayer( context );
 
                     return;
                 }
@@ -214,8 +210,7 @@ namespace EcoMarketTools
                 // WEB FILES
                 // -------------------------
 
-                if (path == "/" ||
-    path == "/index.html")
+                if (path == "/" || path == "/index.html")
                 {
                     ServeWebFile(
                         context,
@@ -459,35 +454,28 @@ namespace EcoMarketTools
             context.Response.OutputStream.Close();
         }
 
-        private void ServePlayer(
-    HttpListenerContext context)
+        private void ServePlayer( HttpListenerContext context)
         {
-            var probe =
-                MarketProbe.Instance;
+            var probe = PlayerProbe.Instance;
 
-            var position =
-                probe.PlayerPosition;
+            probe.UpdatePlayerState();
+
+            var position = probe.PlayerPosition;
 
             var dto =
                 new
                 {
-                    Name =
-                        probe.PlayerName,
+                    Name = probe.PlayerName,
 
-                    X =
-                        position.x,
+                    X = position.x,
 
-                    Y =
-                        position.y,
+                    Y = position.y,
 
-                    Z =
-                        position.z,
+                    Z = position.z,
 
-                    CurrentWeight =
-                        0,
+                    CurrentWeight = probe.PlayerCurrentWeight,
 
-                    MaxWeight =
-                        0
+                    MaxWeight = probe.PlayerMaxWeight
                 };
 
             string json =
@@ -500,11 +488,9 @@ namespace EcoMarketTools
                     json
                 );
 
-            context.Response.ContentType =
-                "application/json";
+            context.Response.ContentType = "application/json";
 
-            context.Response.ContentLength64 =
-                bytes.Length;
+            context.Response.ContentLength64 = bytes.Length;
 
             context.Response.OutputStream.Write(
                 bytes,

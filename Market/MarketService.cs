@@ -22,7 +22,7 @@ namespace EcoMarketTools
             if (filter.Type.HasValue)
             {
                 query = query.Where(
-                    o => o.Type == filter.Type.Value
+                    o => o.OrderType == filter.Type.Value
                 );
             }
 
